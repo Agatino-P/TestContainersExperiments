@@ -1,29 +1,26 @@
+using Dapper;
+using Docker.DotNet.Models;
 using DotNet.Testcontainers.Builders;
-using DotNet.Testcontainers.Configurations;
 using DotNet.Testcontainers.Containers;
-using Microsoft.Extensions.Logging;
-using Org.BouncyCastle.Security;
-using Testcontainers.MySql;
+using MySqlConnector;
+using System.Security.Cryptography;
 
 namespace TestContainersExperiments;
 
 public class UnitTest1
 {
-    private MySqlContainer mySqlContainer = new MySqlBuilder()
-            .WithPortBinding(3306, true)
-        .WithEnvironment("MYSQL_ROOT_PASSWORD", "123456Ab")
-        .WithEnvironment("MYSQL_USER", "admin")
-        .WithEnvironment("MYSQL_PASSWORD", "123456Ab")
-        .WithWaitStrategy(Wait.ForUnixContainer().UntilPortIsAvailable(3306))
-        //.WithDockerEndpoint("127.0.0.1:2375 ")
-        .WithCleanUp(true)
-        .Build();
-
-
+        private IContainer mySqlContainer = new ContainerBuilder()
+          .WithImage("percona")
+          .WithPortBinding(3306, true)
+          .WithEnvironment("MYSQL_ROOT_PASSWORD", "123456Ab")
+          .WithEnvironment("MYSQL_USER", "admin")
+          .WithEnvironment("MYSQL_PASSWORD", "123456Ab")
+          .WithWaitStrategy(Wait.ForUnixContainer().UntilPortIsAvailable(3306))
+          .WithCleanUp(true)
+          .Build();
 
     public UnitTest1()
     {
-
 
     }
 
@@ -32,7 +29,13 @@ public class UnitTest1
     {
         await mySqlContainer.StartAsync();
         int port = mySqlContainer.GetMappedPublicPort(3306);
-        await mySqlContainer.StopAsync();
+        string connectionString = $"Server=localhost;Port={port};User=admin;Password=123456Ab;";
+
+        MySqlConnection mySqlConnection= new MySqlConnection(connectionString) ;
+            var a = mySqlConnection.Query("Show Variables").AsList();
+       
+            await mySqlContainer.StopAsync();
+
 
     }
 }
