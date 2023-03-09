@@ -1,0 +1,19 @@
+using DotNet.Testcontainers.Containers;
+using Microsoft.Extensions.Logging;
+
+namespace Testcontainers.MySql;
+
+/// <inheritdoc cref="DockerContainer" />
+
+public sealed class MySqlContainer : DockerContainer
+{
+    /// <summary>
+    /// Initializes a new instance of the <see cref="MySqlContainer" /> class.
+    /// </summary>
+    /// <param name="configuration">The container configuration.</param>
+    /// <param name="logger">The logger.</param>
+    public MySqlContainer(MySqlConfiguration configuration, ILogger logger)
+        : base(configuration, logger)
+    {
+    }
+}
