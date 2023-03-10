@@ -9,4 +9,4 @@ CREATE TABLE `sms_provider_api`.`msgbus_inbox` (
   INDEX `idx_purge` ( `ts` )
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 	
-SELECT SLEEP(50);
+-- SELECT SLEEP(50);

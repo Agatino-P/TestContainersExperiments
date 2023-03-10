@@ -104,7 +104,7 @@ public class UnitTest1
 
         //Given that the stase doesn't seem reliable a solution could be to wait for the log message with a timeot cancellation token
         CancellationTokenSource cts = new CancellationTokenSource();
-        cts.CancelAfter(TimeSpan.FromSeconds(5));
+        cts.CancelAfter(TimeSpan.FromSeconds(15));
         try
         {
             await myLiquibase.StartAsync(cts.Token);
