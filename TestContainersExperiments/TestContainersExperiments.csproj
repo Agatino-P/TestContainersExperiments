@@ -26,13 +26,22 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="liquibase\changelog\changelog..xml">
+    <None Update="liquibase\changelog\changelog.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="liquibase\changelog\create_tables.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="liquibase\changelog\create_database.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="liquibase\changelog\liquibase.local.properties">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="liquibase\changelog\mysql-connector-j-8.0.31.jar">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="liquibase\scripts\script11.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="liquibase\scripts\script1.sql">

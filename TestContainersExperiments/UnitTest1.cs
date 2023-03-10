@@ -3,6 +3,7 @@ using Docker.DotNet.Models;
 using DotNet.Testcontainers.Builders;
 using DotNet.Testcontainers.Configurations;
 using DotNet.Testcontainers.Containers;
+using DotNet.Testcontainers.Networks;
 using Microsoft.Extensions.Logging;
 using Microsoft.VisualBasic;
 using MySqlConnector;
@@ -66,12 +67,18 @@ public class UnitTest1
     [Fact]
     public async void WithVolumes()
     {
+
+        INetwork network = new NetworkBuilder().WithName(Guid.NewGuid().ToString("D")).Build();
+        await network.CreateAsync().ConfigureAwait(false);
+
         MySqlBuilder mySqlBuilder = new MySqlBuilder()
            .WithImage("percona:8.0.27-18")
            .WithPortBinding(31788, 3306)
            //.WithPortBinding(3306, true)
            .WithEnvironment("MYSQL_ROOT_PASSWORD", "123456Ab")
            .WithWaitStrategy(Wait.ForUnixContainer().UntilPortIsAvailable(3306))
+           .WithNetwork(network)
+           .WithNetworkAliases("percona")
            .WithCleanUp(true);
         MySqlContainer mySqlContainer = mySqlBuilder.Build();
         await mySqlContainer.StartAsync(default);
@@ -80,31 +87,31 @@ public class UnitTest1
         string pwd = AppContext.BaseDirectory;
         string localChangelogPath = $"{pwd}liquibase\\changelog";
         string localScriptsPath = $"{pwd}liquibase\\scripts";
-        string [] liquibaseCommands = { "update", @"--defaultsFile=/liquibase/changelog/liquibase.local.properties" };
+        string[] liquibaseCommands = { "update", @"--defaultsFile=/liquibase/changelog/liquibase.properties" };
+        string logMessage = "Liquibase command 'update' was executed successfully.";
+
+
         IContainer myLiquibase = new ContainerBuilder()
           .WithImage("liquibase/liquibase")
           //.WithPortBinding(28080, 80)
           .WithBindMount(localChangelogPath, "/liquibase/changelog")
           .WithBindMount(localScriptsPath, "/liquibase/scripts")
           .WithCommand(liquibaseCommands)
-          .WithWaitStrategy(Wait.ForUnixContainer().UntilContainerIsHealthy())
-          /*
-              - v $PWD / changelog:/ liquibase / changelog \
-              -v $PWD / .. / src / Aruba.Menu.MySql / Script:/ liquibase / scripts \
-              liquibase / liquibase \
-              update \
-              --defaultsFile =/ liquibase / changelog / liquibase.local.properties
-          */
-          //  .WithWaitStrategy(Wait.ForUnixContainer().UntilPortIsAvailable(3306))
-          //  .WithCleanUp(true)
+          .WithWaitStrategy(Wait.ForUnixContainer().UntilMessageIsLogged(logMessage))
+          .WithNetwork(network)
           .Build();
+
+
+        //Given that the stase doesn't seem reliable a solution could be to wait for the log message with a timeot cancellation token
+        CancellationTokenSource cts = new CancellationTokenSource();
+        cts.CancelAfter(TimeSpan.FromSeconds(5));
         try
         {
-        await myLiquibase.StartAsync();
-
+            await myLiquibase.StartAsync(cts.Token);
         }
-        catch (Exception)
+        catch (OperationCanceledException ex)
         {
+            throw;
         }
         int a = 1;
     }

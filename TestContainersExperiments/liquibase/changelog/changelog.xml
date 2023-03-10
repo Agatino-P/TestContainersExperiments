@@ -6,7 +6,9 @@
     
     <include file="create_database.xml"/>
     <include file="create_tables.xml"/>
-    <include file="insert_tables.xml"/>
+    <!--
+	<include file="insert_tables.xml"/>
+	-->
     
     
 </databaseChangeLog>
