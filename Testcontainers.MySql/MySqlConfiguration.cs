@@ -1,7 +1,6 @@
 namespace Testcontainers.MySql;
 
 /// <inheritdoc cref="ContainerConfiguration" />
-[PublicAPI]
 public sealed class MySqlConfiguration : ContainerConfiguration
 {
     /// <summary>
