@@ -61,11 +61,9 @@ public class UnitTest1
         try
         {
             await myLiquibase.StartAsync(cts.Token);
-
         }
         catch (Exception ex)
         {
-
             throw;
         }
 
@@ -86,8 +84,8 @@ public class UnitTest1
 
 
         LiquibaseContainer liquibase = new LiquibaseBuilder()
-          .WithImage("liquibase/liquibase")
-          .WithBindMount(localChangelogPath, "/liquibase/changelog")
+          //.WithImage("liquibase/liquibase")
+          //.WithBindMount(localChangelogPath, "/liquibase/changelog")
           .WithBindMount(localScriptsPath, "/liquibase/scripts")
           .WithCommand(liquibaseCommands)
           .WithWaitStrategy(Wait.ForUnixContainer().UntilMessageIsLogged(logMessage))
@@ -97,9 +95,7 @@ public class UnitTest1
         ////.WithChangelogRelativePath("liquibase\\changelog")
         ////.WithScriptsRelativePath("liquibase\\scripts")
         //.WithCommand(liquibaseCommands)
-        //.WithNetwork(network)
         //.WithLoglevel("DEBUG")
-        //.Build();
 
         CancellationTokenSource cts = new CancellationTokenSource();
         cts.CancelAfter(TimeSpan.FromSeconds(15));

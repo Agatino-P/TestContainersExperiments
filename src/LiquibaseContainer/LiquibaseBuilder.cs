@@ -48,9 +48,9 @@ public sealed class LiquibaseBuilder : ContainerBuilder<LiquibaseBuilder, Liquib
         => Merge(DockerResourceConfiguration, new LiquibaseConfiguration(changelogRelativePath: loglevel))
         .WithEnvironment("LIQUIBASE_LOG_LEVEL", loglevel);
 
-    //public const string LiquibaseImage = "liquibase/liquibase";
-    //public const string DefaultChangelogRelativePath = "liquibase\\changelog";
-    //public const string DefaultScriptsRelativePath = "liquibase\\scripts";
+    public const string LiquibaseImage = "liquibase/liquibase";
+    public const string DefaultChangelogRelativePath = "liquibase\\changelog";
+    public const string DefaultScriptsRelativePath = "liquibase\\scripts";
     //public const string DefaultClasspath = "/liquibase/changelog/mysql-connector-j-8.0.31.jar"; //Better in a derived class
     //public const string DefaultDriver = "com.mysql.cj.jdbc.Driver"; //Better in a derived class
     //public const string DefaultUsername = "root"; //Better in a derived class
@@ -68,8 +68,8 @@ public sealed class LiquibaseBuilder : ContainerBuilder<LiquibaseBuilder, Liquib
         string logMessage = "Liquibase command 'update' was executed successfully.";
 
         LiquibaseBuilder builder = base.Init()
-            //.WithImage(LiquibaseImage)
-            //.WithChangelogRelativePath(DefaultChangelogRelativePath)
+            .WithImage(LiquibaseImage)
+            .WithChangelogRelativePath(DefaultChangelogRelativePath)
             //.WithScriptsRelativePath(DefaultScriptsRelativePath)
             //.WithClasspath(DefaultClasspath)
             //.WithDriver(DefaultDriver)
