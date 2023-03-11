@@ -26,6 +26,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\LiquibaseContainer\LiquibaseContainer.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Update="liquibase\changelog\changelog.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -35,7 +39,7 @@
     <None Update="liquibase\changelog\create_database.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="liquibase\changelog\liquibase.local.properties">
+    <None Update="liquibase\changelog\liquibase.properties">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="liquibase\changelog\mysql-connector-j-8.0.31.jar">
