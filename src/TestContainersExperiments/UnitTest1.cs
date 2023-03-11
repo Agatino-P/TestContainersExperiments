@@ -15,17 +15,18 @@ public class UnitTest1
     public UnitTest1()
     {
         MySqlBuilder mySqlBuilder = new MySqlBuilder()
-           .WithImage("percona:8.0.27-18")
-           .WithPortBinding(31788, 3306)
+           .WithImage("percona:8.0.27-18")           .WithName("percona")
+           .WithPortBinding(3306, 3306)
            //.WithPortBinding(3306, true)
            .WithEnvironment("MYSQL_ROOT_PASSWORD", "123456Ab")
            .WithWaitStrategy(Wait.ForUnixContainer().UntilPortIsAvailable(3306))
            .WithNetwork(network)
            .WithNetworkAliases("percona")
-           .WithCleanUp(true);
+           .WithCleanUp(true)
+           ;
         mySqlContainer = mySqlBuilder.Build();
         //string connectionString = mySqlContainer.GetConnectionString();
-        
+
     }
 
     [Fact]
@@ -50,28 +51,60 @@ public class UnitTest1
           .WithNetwork(network)
           .Build();
 
+          //.WithName("LiquibaseContainer")
+          //.WithNetworkAliases("liquibase")
 
         //Given that the stase doesn't seem reliable a solution could be to wait for the log message with a timeot cancellation token
         CancellationTokenSource cts = new CancellationTokenSource();
-        cts.CancelAfter(TimeSpan.FromSeconds(15));
-        await myLiquibase.StartAsync(cts.Token);
+        cts.CancelAfter(TimeSpan.FromSeconds(150));
+        try
+        {
+            await myLiquibase.StartAsync(cts.Token);
+
+        }
+        catch (Exception ex)
+        {
+
+            throw;
+        }
+
     }
 
     [Fact]
     public async Task WithModuleAsync()
     {
+
         await network.CreateAsync();
         await mySqlContainer.StartAsync(default);
+
+        string pwd = AppContext.BaseDirectory;
+        string localChangelogPath = $"{pwd}liquibase\\changelog";
+        string localScriptsPath = $"{pwd}liquibase\\scripts";
+        string[] liquibaseCommands = { "update", @"--defaultsFile=/liquibase/changelog/liquibase.properties" };
+        string logMessage = "Liquibase command 'update' was executed successfully.";
+
+
         LiquibaseContainer liquibase = new LiquibaseBuilder()
-            //.WithChangelogRelativePath("liquibase\\changelog")
-            //.WithScriptsRelativePath("liquibase\\scripts")
-            .WithNetwork(network).Build();
+          .WithImage("liquibase/liquibase")
+          .WithBindMount(localChangelogPath, "/liquibase/changelog")
+          .WithBindMount(localScriptsPath, "/liquibase/scripts")
+          .WithCommand(liquibaseCommands)
+          .WithWaitStrategy(Wait.ForUnixContainer().UntilMessageIsLogged(logMessage))
+          .WithNetwork(network)
+          .Build();
+
+        ////.WithChangelogRelativePath("liquibase\\changelog")
+        ////.WithScriptsRelativePath("liquibase\\scripts")
+        //.WithCommand(liquibaseCommands)
+        //.WithNetwork(network)
+        //.WithLoglevel("DEBUG")
+        //.Build();
 
         CancellationTokenSource cts = new CancellationTokenSource();
         cts.CancelAfter(TimeSpan.FromSeconds(15));
         try
         {
-        await liquibase.StartAsync(cts.Token);
+            await liquibase.StartAsync(cts.Token);
 
         }
         catch (Exception ex)

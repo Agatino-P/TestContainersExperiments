@@ -3,70 +3,70 @@ namespace TestContainers.Liquibase;
 /// <inheritdoc cref="ContainerConfiguration" />
 public sealed class LiquibaseConfiguration : ContainerConfiguration
 {
-    public string? ChangelogRelativePath { get;}
-    public string? ScriptsRelativePath { get; } 
+    //public string? ChangelogRelativePath { get; }
+    //public string? ScriptsRelativePath { get; }
+    //public string? Classpath { get; }
+    //public string? Driver { get; }
+    //public string? Username { get; }
+    //public string? Password { get; }
+    //public string? Url { get; }
+    //public string? ChangelogFile { get; }
+    //public string? SearchPath { get; }
+    //public string? Loglevel { get; }
+
+
+    public LiquibaseConfiguration(string? changelogRelativePath = null,
+                                  string? scriptsRelativePath = null,
+                                  string? classpath = null,
+                                  string? driver = null,
+                                  string? username = null,
+                                  string? password = null,
+                                  string? url = null,
+                                  string? changelogFile = null,
+                                  string? searchPath = null,
+                                  string? loglevel = null)
+
+    {
+        //ChangelogRelativePath = changelogRelativePath;
+        //ScriptsRelativePath = scriptsRelativePath;
+        //Classpath = classpath;
+        //Driver = driver;
+        //Username = username;
+        //Password = password;
+        //Url = url;
+        //ChangelogFile = changelogFile;
+        //SearchPath = searchPath;
+        //Loglevel = loglevel;
+    }
     
-
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="LiquibaseConfiguration" /> class.
-    /// </summary>
-    /// <param name="config">The Liquibase config.</param>
-    public LiquibaseConfiguration(string? changelogRelativePath=null, string? scriptsRelativePath = null)
-    {
-        ChangelogRelativePath = changelogRelativePath;
-        ScriptsRelativePath = scriptsRelativePath;
-      
-    }
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="LiquibaseConfiguration" /> class.
-    /// </summary>
-    /// <param name="resourceConfiguration">The Docker resource configuration.</param>
-    public LiquibaseConfiguration(IResourceConfiguration<CreateContainerParameters> resourceConfiguration)
-        : base(resourceConfiguration)
-    {
-        // Passes the configuration upwards to the base implementations to create an updated immutable copy.
-    }
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="LiquibaseConfiguration" /> class.
-    /// </summary>
-    /// <param name="resourceConfiguration">The Docker resource configuration.</param>
-    public LiquibaseConfiguration(IContainerConfiguration resourceConfiguration)
-        : base(resourceConfiguration)
-    {
-        // Passes the configuration upwards to the base implementations to create an updated immutable copy.
-    }
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="LiquibaseConfiguration" /> class.
-    /// </summary>
-    /// <param name="resourceConfiguration">The Docker resource configuration.</param>
-    public LiquibaseConfiguration(LiquibaseConfiguration resourceConfiguration)
-        : this(new LiquibaseConfiguration(), resourceConfiguration)
-    {
-        // Passes the configuration upwards to the base implementations to create an updated immutable copy.
-    }
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="LiquibaseConfiguration" /> class.
-    /// </summary>
-    /// <param name="oldValue">The old Docker resource configuration.</param>
-    /// <param name="newValue">The new Docker resource configuration.</param>
     public LiquibaseConfiguration(LiquibaseConfiguration oldValue, LiquibaseConfiguration newValue)
         : base(oldValue, newValue)
     {
-        ChangelogRelativePath = BuildConfiguration.Combine(oldValue.ChangelogRelativePath, newValue.ChangelogRelativePath);
-        ScriptsRelativePath = BuildConfiguration.Combine(oldValue.ScriptsRelativePath, newValue.ScriptsRelativePath);
-//        Network = BuildConfiguration.Combine(oldValue.Network, newValue.Network);
+        //ChangelogRelativePath = BuildConfiguration.Combine(oldValue.ChangelogRelativePath, newValue.ChangelogRelativePath);
+        //ScriptsRelativePath = BuildConfiguration.Combine(oldValue.ScriptsRelativePath, newValue.ScriptsRelativePath);
+        //Classpath = BuildConfiguration.Combine(oldValue.Classpath, newValue.Classpath);
+        //Driver = BuildConfiguration.Combine(oldValue.Driver, newValue.Driver);
+        //Username = BuildConfiguration.Combine(oldValue.Username, newValue.Username);
+        //Password = BuildConfiguration.Combine(oldValue.Password, newValue.Password);
+        //Url = BuildConfiguration.Combine(oldValue.Url, newValue.Url);
+        //ChangelogFile = BuildConfiguration.Combine(oldValue.ChangelogFile, newValue.ChangelogFile);
+        //SearchPath = BuildConfiguration.Combine(oldValue.SearchPath, newValue.SearchPath);
+        //SearchPath = BuildConfiguration.Combine(oldValue.SearchPath, newValue.SearchPath);
+    }
 
-    // // Create an updated immutable copy of the module configuration.
-    // Config = BuildConfiguration.Combine(oldValue.Config, newValue.Config);
-}
+    public LiquibaseConfiguration(IResourceConfiguration<CreateContainerParameters> resourceConfiguration)
+        : base(resourceConfiguration)
+    {
+    }
 
-    // /// <summary>
-    // /// Gets the Liquibase config.
-    // /// </summary>
-    // public object Config { get; }
+    public LiquibaseConfiguration(IContainerConfiguration resourceConfiguration)
+        : base(resourceConfiguration)
+    {
+    }
+
+    public LiquibaseConfiguration(LiquibaseConfiguration resourceConfiguration)
+        : this(new LiquibaseConfiguration(), resourceConfiguration)
+    {
+    }
+
 }
