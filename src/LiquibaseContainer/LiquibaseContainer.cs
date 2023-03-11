@@ -1,7 +1,4 @@
-using DotNet.Testcontainers.Containers;
-using Microsoft.Extensions.Logging;
-
-namespace Liquibase;
+namespace TestContainers.Liquibase;
 
 /// <inheritdoc cref="DockerContainer" />
 

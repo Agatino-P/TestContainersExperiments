@@ -1,6 +1,4 @@
-using DotNet.Testcontainers.Networks;
-
-namespace Liquibase;
+namespace TestContainers.Liquibase;
 
 /// <inheritdoc cref="ContainerConfiguration" />
 public sealed class LiquibaseConfiguration : ContainerConfiguration
