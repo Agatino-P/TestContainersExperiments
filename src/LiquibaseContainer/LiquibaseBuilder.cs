@@ -17,23 +17,16 @@ public sealed class LiquibaseBuilder : ContainerBuilder<LiquibaseBuilder, Liquib
 
     public LiquibaseBuilder WithScriptsRelativePath(string scriptsRelativePath)
         => Merge(DockerResourceConfiguration, new LiquibaseConfiguration(scriptsRelativePath: scriptsRelativePath))
-            .WithBindMount(Path.Combine(AppContext.BaseDirectory, scriptsRelativePath), "/liquibase/scripts");
+            .WithBindMount(Path.Combine(AppContext.BaseDirectory, scriptsRelativePath),   "/liquibase/scripts");
 
-    public LiquibaseBuilder WithClasspath(string classpath)
-    => Merge(DockerResourceConfiguration, new LiquibaseConfiguration(changelogRelativePath: classpath))
-        .WithEnvironment("LIQUIBASE_CLASSPATH", classpath);
-
-    public LiquibaseBuilder WithDriver(string driver)
-        => Merge(DockerResourceConfiguration, new LiquibaseConfiguration(changelogRelativePath: driver))
-        .WithEnvironment("LIQUIBASE_DRIVER", driver);
-
+    
     public LiquibaseBuilder WithUsername(string username)
         => Merge(DockerResourceConfiguration, new LiquibaseConfiguration(changelogRelativePath: username))
-        .WithEnvironment("LIQUIBASE_USERNAME", username);
+        .WithEnvironment("LIQUIBASE_COMMAND_USERNAME", username);
 
     public LiquibaseBuilder WithPassword(string password)
         => Merge(DockerResourceConfiguration, new LiquibaseConfiguration(changelogRelativePath: password))
-        .WithEnvironment("LIQUIBASE_PASSWORD", password);
+        .WithEnvironment("LIQUIBASE_COMMAND_PASSWORD", password);
 
     public LiquibaseBuilder WithUrl(string url)
         => Merge(DockerResourceConfiguration, new LiquibaseConfiguration(changelogRelativePath: url))
@@ -41,27 +34,22 @@ public sealed class LiquibaseBuilder : ContainerBuilder<LiquibaseBuilder, Liquib
     public LiquibaseBuilder WithChangelogFile(string changelogFile)
         => Merge(DockerResourceConfiguration, new LiquibaseConfiguration(changelogRelativePath: changelogFile))
         .WithEnvironment("LIQUIBASE_COMMAND_CHANGELOG_FILE", changelogFile);
-    public LiquibaseBuilder WithSearchPath(string searchPath)
-        => Merge(DockerResourceConfiguration, new LiquibaseConfiguration(changelogRelativePath: searchPath))
-        .WithEnvironment("LIQUIBASE_SEARCHPATH", searchPath);
     public LiquibaseBuilder WithLoglevel(string loglevel)
         => Merge(DockerResourceConfiguration, new LiquibaseConfiguration(changelogRelativePath: loglevel))
         .WithEnvironment("LIQUIBASE_LOG_LEVEL", loglevel);
 
     public const string LiquibaseImage = "liquibase/liquibase";
     public const string DefaultChangelogRelativePath = "liquibase\\changelog";
-    public const string DefaultScriptsRelativePath = "liquibase\\scripts";
-    //public const string DefaultClasspath = "/liquibase/changelog/mysql-connector-j-8.0.31.jar"; //Better in a derived class
-    //public const string DefaultDriver = "com.mysql.cj.jdbc.Driver"; //Better in a derived class
-    //public const string DefaultUsername = "root"; //Better in a derived class
-    //public const string DefaultPassword = "123456Ab"; //Better in a derived class
-    //public const string DefaultUrl = "jdbc:mysql://percona:3306/sms_provider_api?createDatabaseIfNotExist=true"; //Better in a derived class
-    //public const string DefaultChangelogFile = "changelog.xml";
-    //public const string DefaultSearchPath = "/liquibase/changelog,/liquibase/scripts";
-    //public const string DefaultLoglevel = "INFO";
-    //public readonly string[] DefaultLiquibaseCommands = { "update"};
+    public const string DefaultScriptsRelativePath =   "liquibase\\scripts";
+    public const string DefaultUsername = "root"; //Better in a derived class
+    public const string DefaultPassword = "123456Ab"; //Better in a derived class
+    public const string DefaultChangelogFile = "changelog.xml";
+    public const string DefaultLoglevel = "INFO";
+    public readonly string[] DefaultLiquibaseCommands = { "update" , @"--defaultsFile=/liquibase/changelog/liquibase.properties"};
+    
+    public const string DefaultUrl = "jdbc:mysql://percona:3306/sms_provider_api?createDatabaseIfNotExist=true"; //Better in a derived class
 
-    protected override LiquibaseConfiguration DockerResourceConfiguration { get; } //= default!;
+protected override LiquibaseConfiguration DockerResourceConfiguration { get; } //= default!;
     protected override LiquibaseBuilder Init()
     {
         //string[] liquibaseCommands = { "update", @"--defaultsFile=/liquibase/changelog/liquibase.properties" };
@@ -70,17 +58,14 @@ public sealed class LiquibaseBuilder : ContainerBuilder<LiquibaseBuilder, Liquib
         LiquibaseBuilder builder = base.Init()
             .WithImage(LiquibaseImage)
             .WithChangelogRelativePath(DefaultChangelogRelativePath)
-            //.WithScriptsRelativePath(DefaultScriptsRelativePath)
-            //.WithClasspath(DefaultClasspath)
-            //.WithDriver(DefaultDriver)
-            //.WithUsername(DefaultUsername)
-            //.WithPassword(DefaultPassword)
+            .WithScriptsRelativePath(DefaultScriptsRelativePath)
+            .WithUsername(DefaultUsername)
+            .WithPassword(DefaultPassword)
+            .WithChangelogFile(DefaultChangelogFile)
             //.WithUrl(DefaultUrl)   
-            //.WithChangelogFile(DefaultChangelogFile)
-            //.WithSearchPath(DefaultSearchPath) 
-            //.WithLoglevel(DefaultLoglevel) 
-            //.WithCommand(DefaultLiquibaseCommands)
-            //.WithWaitStrategy(Wait.ForUnixContainer().UntilMessageIsLogged(logMessage))
+            .WithLoglevel(DefaultLoglevel) 
+            .WithCommand(DefaultLiquibaseCommands)
+            .WithWaitStrategy(Wait.ForUnixContainer().UntilMessageIsLogged(logMessage))
           ;
 
         return builder;

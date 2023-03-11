@@ -76,26 +76,29 @@ public class UnitTest1
         await network.CreateAsync();
         await mySqlContainer.StartAsync(default);
 
-        string pwd = AppContext.BaseDirectory;
-        string localChangelogPath = $"{pwd}liquibase\\changelog";
-        string localScriptsPath = $"{pwd}liquibase\\scripts";
         string[] liquibaseCommands = { "update", @"--defaultsFile=/liquibase/changelog/liquibase.properties" };
         string logMessage = "Liquibase command 'update' was executed successfully.";
 
 
         LiquibaseContainer liquibase = new LiquibaseBuilder()
-          //.WithImage("liquibase/liquibase")
-          //.WithBindMount(localChangelogPath, "/liquibase/changelog")
-          .WithBindMount(localScriptsPath, "/liquibase/scripts")
-          .WithCommand(liquibaseCommands)
-          .WithWaitStrategy(Wait.ForUnixContainer().UntilMessageIsLogged(logMessage))
+          //.WithCommand(liquibaseCommands)
+          //.WithWaitStrategy(Wait.ForUnixContainer().UntilMessageIsLogged(logMessage))
           .WithNetwork(network)
           .Build();
-
-        ////.WithChangelogRelativePath("liquibase\\changelog")
-        ////.WithScriptsRelativePath("liquibase\\scripts")
-        //.WithCommand(liquibaseCommands)
-        //.WithLoglevel("DEBUG")
+        /* 
+         * Devono restare
+        classpath: /liquibase/changelog/mysql-connector-j-8.0.31.jar
+        driver: com.mysql.cj.jdbc.Driver
+        searchPath:/liquibase/changelog,/liquibase/scripts
+        
+        Vanno testati
+        username: root
+        password: 123456Ab
+        url: jdbc:mysql://percona:3306/sms_provider_api_liquibase?createDatabaseIfNotExist=true
+        changelogFile: changelog.xml
+        loglevel: INFO
+         * 
+         */
 
         CancellationTokenSource cts = new CancellationTokenSource();
         cts.CancelAfter(TimeSpan.FromSeconds(15));
