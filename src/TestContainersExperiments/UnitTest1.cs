@@ -15,7 +15,8 @@ public class UnitTest1
     public UnitTest1()
     {
         MySqlBuilder mySqlBuilder = new MySqlBuilder()
-           .WithImage("percona:8.0.27-18")           .WithName("percona")
+           .WithImage("percona:8.0.27-18")           
+           .WithName("percona")
            .WithPortBinding(3306, 3306)
            //.WithPortBinding(3306, true)
            .WithEnvironment("MYSQL_ROOT_PASSWORD", "123456Ab")
